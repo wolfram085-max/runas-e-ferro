@@ -9,8 +9,8 @@ const campaigns = [
 
 export default function CampaignsPage() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-6xl flex-col gap-8 px-6 py-16">
-      <header className="space-y-3">
+    <main className="page-shell">
+      <header className="page-header">
         <h1 className="text-3xl font-semibold">Campanhas</h1>
         <p className="text-slate-300">
           Gerencie campanhas, mapas, facções, handouts e permissões por papel.

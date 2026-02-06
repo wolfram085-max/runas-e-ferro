@@ -14,10 +14,22 @@ body {
   @apply min-h-screen bg-slate-950 text-slate-100;
 }
 
+.page-shell {
+  @apply mx-auto flex min-h-screen max-w-6xl flex-col gap-10 px-6 py-10;
+}
+
+.page-header {
+  @apply flex flex-col gap-3;
+}
+
 .panel {
   @apply rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl;
 }
 
 .badge {
   @apply inline-flex items-center rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs font-medium text-slate-200;
+}
+
+.ghost-button {
+  @apply rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 hover:border-slate-500;
 }

@@ -9,8 +9,8 @@ const sessions = [
 
 export default function SessionsPage() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-6xl flex-col gap-8 px-6 py-16">
-      <header className="space-y-3">
+    <main className="page-shell">
+      <header className="page-header">
         <h1 className="text-3xl font-semibold">Sessões</h1>
         <p className="text-slate-300">
           Crie sessões com participantes, notas e logs de eventos. Finalize para gerar

@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { SiteHeader } from "@/components/site-header";
 import { Toaster } from "@/components/toaster";
 
 export const metadata: Metadata = {
@@ -16,6 +17,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className="main-layout">
         <div className="min-h-screen">
+          <SiteHeader />
           {children}
           <Toaster />
         </div>

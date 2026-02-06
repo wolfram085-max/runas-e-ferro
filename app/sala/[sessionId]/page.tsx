@@ -18,6 +18,7 @@ export default function RoomPage() {
   ]);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [voiceRate, setVoiceRate] = useState(1);
+  const [chatInput, setChatInput] = useState("");
 
   const active = useMemo(() => initialTurnOrder[turnIndex], [turnIndex]);
 
@@ -46,13 +47,24 @@ export default function RoomPage() {
     window.speechSynthesis.speak(utterance);
   }
 
+  function sendChat() {
+    if (!chatInput.trim()) return;
+    setLog((prev) => [...prev, `Chat: ${chatInput}`]);
+    setChatInput("");
+  }
+
   return (
-    <main className="mx-auto flex min-h-screen max-w-6xl flex-col gap-8 px-6 py-12">
-      <header className="space-y-3">
+    <main className="page-shell">
+      <header className="page-header">
         <h1 className="text-3xl font-semibold">Sala em tempo real</h1>
         <p className="text-slate-300">
           Chat, logs, rolagens e turn tracker com IA copiloto. Modo voz opcional com STT/TTS.
         </p>
+        <div className="flex flex-wrap gap-3">
+          <span className="badge">Sessão ativa</span>
+          <span className="badge">Mestre: Mestre Demo</span>
+          <span className="badge">Jogadores: 3</span>
+        </div>
       </header>
 
       <section className="grid gap-6 lg:grid-cols-[2fr,1fr]">
@@ -93,12 +105,13 @@ export default function RoomPage() {
             >
               Próximo turno
             </button>
-            <button className="rounded-full border border-slate-700 px-4 py-2 text-sm">
+            <button className="ghost-button">
               Aplicar dano/cura
             </button>
-            <button className="rounded-full border border-slate-700 px-4 py-2 text-sm">
+            <button className="ghost-button">
               Adicionar condição
             </button>
+            <button className="ghost-button">Gastar FOC</button>
           </div>
         </div>
 
@@ -139,7 +152,7 @@ export default function RoomPage() {
                 />
               </label>
               <button
-                className="rounded-full border border-slate-700 px-4 py-2 text-sm"
+                className="ghost-button"
                 onClick={playSummary}
               >
                 Reproduzir resumo narrado
@@ -149,13 +162,39 @@ export default function RoomPage() {
         </div>
       </section>
 
-      <section className="panel p-6">
-        <h2 className="text-lg font-semibold">Logs persistentes</h2>
-        <ul className="mt-4 space-y-2 text-sm text-slate-300">
-          {log.map((entry, index) => (
-            <li key={`${entry}-${index}`}>{entry}</li>
-          ))}
-        </ul>
+      <section className="grid gap-6 lg:grid-cols-[2fr,1fr]">
+        <div className="panel p-6">
+          <h2 className="text-lg font-semibold">Chat e logs persistentes</h2>
+          <ul className="mt-4 space-y-2 text-sm text-slate-300">
+            {log.map((entry, index) => (
+              <li key={`${entry}-${index}`}>{entry}</li>
+            ))}
+          </ul>
+          <div className="mt-4 flex gap-2">
+            <input
+              className="flex-1 rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
+              placeholder="Digite uma mensagem ou rolagem..."
+              value={chatInput}
+              onChange={(event) => setChatInput(event.target.value)}
+            />
+            <button className="rounded-full bg-rf-brand px-4 py-2 text-sm" onClick={sendChat}>
+              Enviar
+            </button>
+          </div>
+        </div>
+
+        <div className="panel p-6">
+          <h2 className="text-lg font-semibold">Regras rápidas</h2>
+          <p className="mt-2 text-sm text-slate-300">
+            Busque regras do livro básico e abra no painel lateral.
+          </p>
+          <div className="mt-4 space-y-2 text-sm">
+            <button className="ghost-button w-full">Testes, DF e vantagem</button>
+            <button className="ghost-button w-full">Estrutura de turno</button>
+            <button className="ghost-button w-full">Condições</button>
+            <button className="ghost-button w-full">Abrir viewer completo</button>
+          </div>
+        </div>
       </section>
     </main>
   );

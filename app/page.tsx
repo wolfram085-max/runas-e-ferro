@@ -2,8 +2,8 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-6xl flex-col gap-12 px-6 py-16">
-      <header className="space-y-4">
+    <main className="page-shell">
+      <header className="page-header">
         <span className="badge">SaaS Runas e Ferro</span>
         <h1 className="text-4xl font-semibold text-slate-100 md:text-6xl">
           Runas e Ferro Studio
@@ -20,10 +20,13 @@ export default function Home() {
             Ver Demo guiada
           </Link>
           <Link
-            className="rounded-full border border-slate-700 px-6 py-3 text-sm font-semibold text-slate-200"
+            className="ghost-button"
             href="/regras"
           >
             Navegar Regras
+          </Link>
+          <Link className="ghost-button" href="/sala/demo">
+            Entrar na sala demo
           </Link>
         </div>
       </header>
@@ -51,6 +54,30 @@ export default function Home() {
             <p className="mt-2 text-sm text-slate-300">{card.description}</p>
           </div>
         ))}
+      </section>
+
+      <section className="panel grid gap-6 p-6 md:grid-cols-[2fr,1fr]">
+        <div>
+          <h2 className="text-xl font-semibold">Fluxo guiado para mestres</h2>
+          <p className="mt-2 text-sm text-slate-300">
+            Siga o roteiro da Demo para validar o MVP: criar campanha → personagens → abrir sala
+            → combate por turnos → encerrar sessão com resumo automático.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <span className="badge">IA com guardrails</span>
+            <span className="badge">RAG do livro básico</span>
+            <span className="badge">Voz opcional</span>
+          </div>
+        </div>
+        <div className="rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900 to-slate-950 p-5 text-sm text-slate-200">
+          <p className="text-xs uppercase tracking-wide text-slate-400">Checklist rápido</p>
+          <ul className="mt-3 space-y-2">
+            <li>✅ Campanha criada</li>
+            <li>✅ 3 personagens seedados</li>
+            <li>✅ Turn tracker ativo</li>
+            <li>✅ Resumo curto e longo</li>
+          </ul>
+        </div>
       </section>
     </main>
   );

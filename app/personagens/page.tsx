@@ -21,8 +21,8 @@ const characters = [
 
 export default function CharactersPage() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-6xl flex-col gap-8 px-6 py-16">
-      <header className="space-y-3">
+    <main className="page-shell">
+      <header className="page-header">
         <h1 className="text-3xl font-semibold">Personagens</h1>
         <p className="text-slate-300">
           Fichas completas com validações por nível, import/export JSON e histórico.

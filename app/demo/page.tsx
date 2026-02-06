@@ -25,8 +25,8 @@ const steps = [
 
 export default function DemoPage() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-6xl flex-col gap-10 px-6 py-16">
-      <header className="space-y-4">
+    <main className="page-shell">
+      <header className="page-header">
         <Link className="text-sm text-slate-400" href="/">
           ← Voltar
         </Link>
@@ -35,6 +35,11 @@ export default function DemoPage() {
           Este fluxo mostra o caminho completo de ponta a ponta, com dados seedados e estado
           persistido no banco. Use-o como roteiro de QA e apresentação comercial.
         </p>
+        <div className="flex flex-wrap gap-3">
+          <span className="badge">Tempo real</span>
+          <span className="badge">Turnos + rolagens</span>
+          <span className="badge">Resumos automáticos</span>
+        </div>
       </header>
 
       <section className="grid gap-6 md:grid-cols-2">
@@ -50,16 +55,16 @@ export default function DemoPage() {
       <section className="panel p-6">
         <h2 className="text-xl font-semibold">Acesso rápido</h2>
         <div className="mt-4 flex flex-wrap gap-3">
-          <Link className="badge" href="/campanhas">
+          <Link className="ghost-button" href="/campanhas">
             Campanhas
           </Link>
-          <Link className="badge" href="/personagens">
+          <Link className="ghost-button" href="/personagens">
             Personagens
           </Link>
-          <Link className="badge" href="/sessoes">
+          <Link className="ghost-button" href="/sessoes">
             Sessões
           </Link>
-          <Link className="badge" href="/sala/demo">
+          <Link className="ghost-button" href="/sala/demo">
             Sala em tempo real
           </Link>
         </div>

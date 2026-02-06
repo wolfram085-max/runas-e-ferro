@@ -1,6 +1,6 @@
 export default function SignInPage() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-6 px-6 py-16">
+    <main className="page-shell max-w-md justify-center">
       <h1 className="text-3xl font-semibold">Entrar</h1>
       <p className="text-sm text-slate-300">
         Autenticação por e-mail com link mágico. Configure as variáveis de ambiente de SMTP.
