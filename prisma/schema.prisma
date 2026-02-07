@@ -1,0 +1,271 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String?
+  email     String?  @unique
+  image     String?
+  passwordHash String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  accounts          Account[]
+  sessions          Session[]
+  campaignMemberships CampaignMember[]
+  characters        Character[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Campaign {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  tone        String
+  mapUrl      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members     CampaignMember[]
+  characters  Character[]
+  sessions    GameSession[]
+  handouts    Handout[]
+}
+
+model CampaignMember {
+  id         String   @id @default(cuid())
+  role       CampaignRole
+  campaignId String
+  userId     String
+  createdAt  DateTime @default(now())
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, userId])
+}
+
+enum CampaignRole {
+  MESTRE
+  JOGADOR
+}
+
+model Character {
+  id           String   @id @default(cuid())
+  name         String
+  campaignId   String
+  userId       String
+  level        Int
+  className    String
+  race         String
+  attributes   Json
+  skills       Json
+  feats        Json
+  equipment    Json
+  runes        Json
+  conditions   Json
+  maxHp        Int
+  maxFoc       Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  auditLogs CharacterAuditLog[]
+  state     CharacterState?
+}
+
+model CharacterAuditLog {
+  id          String   @id @default(cuid())
+  characterId String
+  change      String
+  createdAt   DateTime @default(now())
+
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+}
+
+model GameSession {
+  id          String   @id @default(cuid())
+  campaignId  String
+  name        String
+  notes       String
+  scheduledAt DateTime
+  status      SessionStatus
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  campaign      Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  participants  SessionParticipant[]
+  roomMessages  RoomMessage[]
+  diceRolls     DiceRoll[]
+  combatState   CombatState?
+  summaries     AiSummary[]
+  sessionSummary SessionSummary?
+}
+
+enum SessionStatus {
+  AGENDADA
+  EM_ANDAMENTO
+  ENCERRADA
+}
+
+model SessionParticipant {
+  id         String   @id @default(cuid())
+  sessionId  String
+  characterId String
+
+  session   GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+}
+
+model RoomMessage {
+  id        String   @id @default(cuid())
+  sessionId String
+  sender    String
+  content   String
+  createdAt DateTime @default(now())
+
+  session GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model DiceRoll {
+  id        String   @id @default(cuid())
+  sessionId String
+  roller    String
+  formula   String
+  result    String
+  createdAt DateTime @default(now())
+
+  session GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model CombatState {
+  id          String   @id @default(cuid())
+  sessionId   String   @unique
+  initiative  Json
+  activeTurn  Int
+  updatedAt   DateTime @updatedAt
+
+  session GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model CharacterState {
+  id          String   @id @default(cuid())
+  characterId String   @unique
+  currentHp   Int
+  currentFoc  Int
+  conditions  Json
+
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+}
+
+model Handout {
+  id          String   @id @default(cuid())
+  campaignId  String
+  title       String
+  fileUrl     String
+  createdAt   DateTime @default(now())
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+}
+
+model RulePage {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model RuleIndex {
+  id        String   @id @default(cuid())
+  rulePageId String
+  heading   String
+  content   String
+  embedding Json?
+
+  rulePage RulePage @relation(fields: [rulePageId], references: [id], onDelete: Cascade)
+}
+
+model AiSummary {
+  id          String   @id @default(cuid())
+  sessionId   String
+  shortText   String
+  longText    String
+  narratedText String
+  createdAt   DateTime @default(now())
+
+  session GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model SessionSummary {
+  id        String   @id @default(cuid())
+  sessionId String   @unique
+  shortMd   String
+  longMd    String
+  createdAt DateTime @default(now())
+
+  session GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model WikiPage {
+  id         String   @id @default(cuid())
+  title      String
+  slug       String   @unique
+  category   String
+  tags       Json
+  contentMdx String
+  imageUrl   String?
+  published  Boolean  @default(false)
+  updatedAt  DateTime @updatedAt
+  createdAt  DateTime @default(now())
+}
+
+model MediaAsset {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  type      MediaType
+  url       String
+  thumbUrl  String
+  prompt    String
+  createdAt DateTime @default(now())
+}
+
+enum MediaType {
+  RACE
+  MONSTER
+  BANNER
+}
